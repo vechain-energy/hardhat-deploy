@@ -289,6 +289,19 @@ export function addHelpers(
         provider = new zk.Web3Provider(fixProvider(network.provider));
       } else {
         provider = new Web3Provider(fixProvider(network.provider));
+        if (network.name.includes('vechain')) {
+          const vechainProvider = provider as Web3Provider & { _original_send: typeof provider.send };
+          vechainProvider._original_send = provider.send
+          vechainProvider.send = async (method, args) => {
+            if (method === 'eth_chainId') {
+              const chainId = await vechainProvider._original_send(method, args)
+              return `0x${BigInt(chainId).toString(16).slice(-2)}`;
+
+            }
+            return vechainProvider._original_send.apply(provider, [method, args]);
+          }
+          provider = vechainProvider
+        }
       }
       try {
         const accounts = await provider.send('eth_accounts', []);

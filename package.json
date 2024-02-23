@@ -1,5 +1,5 @@
 {
-  "name": "hardhat-deploy",
+  "name": "@vechain.energy/hardhat-deploy",
   "version": "0.11.45",
   "description": "Hardhat Plugin For Replicable Deployments And Tests",
   "repository": "github:wighawag/hardhat-deploy",
